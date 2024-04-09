@@ -1,0 +1,759 @@
+Nama 	: Umu Habibah
+Rombel	: TI09
+
+
+1. Buatlah database baru dengan nama: dbpegawai
+
+MariaDB [(none)]> CREATE DATABASE dbpegawai;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| db_puskesmas       |
+| dbpegawai          |
+| dbpostti09         |
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
+| ti09               |
++--------------------+
+9 rows in set (0.001 sec)
+
+
+
+2. Masuk ke dbpegawai dengan perintah USE
+
+MariaDB [(none)]> USE dbpegawai;
+Database changed
+MariaDB [dbpegawai]>
+
+3. Buatlah tabel baru dengan nama: divisi, dengan kolom-kolom sbb:
+id int primary key auto_increment
+nama varchar(30) dengan contraint: wajib diisi dan tidak boleh sama
+
+MariaDB [dbpegawai]> CREATE TABLE divisi(
+    -> id int primary key auto_increment,
+    -> nama varchar(30) not null unique);
+Query OK, 0 rows affected (0.038 sec)
+
+4. Tampilkan deskripsi tabel divisi
+
+MariaDB [dbpegawai]> DESC divisi;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.058 sec)
+
+5. Buatlah tabel baru dengan nama: jabatan, dengan kolom-kolom sbb:
+id int primary key auto_increment
+nama varchar(30) dengan contraint: wajib diisi dan tidak boleh sama
+
+MariaDB [dbpegawai]> CREATE TABLE jabatan(
+    -> id int primary key auto_increment,
+    -> nama varchar(30) not null unique);
+Query OK, 0 rows affected (0.054 sec)
+
+
+6. Tampilkan deskripsi tabel jabatan
+
+MariaDB [dbpegawai]> desc jabatan;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.033 sec)
+
+7. Buatlah tabel baru dengan nama: pegawai, dengan kolom-kolom sbb:
+id int primary key auto_increment
+nip char dengan constraint: wajib diisi, tidak boleh sama & 5 karakter
+nama varchar dengan constraint: wajib diisi dan maksimal 30 karakter
+gender enum('Laki-Laki','Perempuan') dengan constraint: wajib diisi
+tmp_lahir varchar dengan constraint: wajib diisi dan maksimal 30 karakter
+tgl_lahir date dengan constraint: wajib diisi
+iddivisi int sebagai foreign key, tidak boleh kosong, merujuk ke tabel divisi ke field id
+idjabatan int sebagai foreign key, tidak boleh kosong, merujuk ke tabel jabatan ke field id
+alamat text
+
+MariaDB [dbpegawai]> CREATE TABLE pegawai(
+    -> id INT primary key auto_increment,
+    -> nip CHAR(5) NOT NULL unique,
+    -> nama varchar(30) NOT NULL unique,
+    -> gender ENUM('Laki-laki','Perempuan')NOT NULL,
+    -> tmp_lahir VARCHAR(30)NOT NULL,
+    -> tgl_lahir DATE NOT NULL,
+    -> iddivisi integer,
+    -> foreign key (iddivisi) references divisi(id),
+    -> idjabatan integer,
+    -> foreign key (idjabatan) references jabatan(id),
+    -> alamat text);
+Query OK, 0 rows affected (0.055 sec)
+
+8. Tampilkan deskripsi tabel pegawai
+
+MariaDB [dbpegawai]> desc pegawai;
++-----------+-------------------------------+------+-----+---------+----------------+
+| Field     | Type                          | Null | Key | Default | Extra          |
++-----------+-------------------------------+------+-----+---------+----------------+
+| id        | int(11)                       | NO   | PRI | NULL    | auto_increment |
+| nip       | char(5)                       | NO   | UNI | NULL    |                |
+| nama      | varchar(30)                   | NO   |     | NULL    |                |
+| gender    | enum('Laki-laki','Perempuan') | NO   |     | NULL    |                |
+| tmp_lahir | varchar(30)                   | NO   |     | NULL    |                |
+| tgl_lahir | date                          | NO   |     | NULL    |                |
+| iddivisi  | int(11)                       | YES  | MUL | NULL    |                |
+| idjabatan | int(11)                       | YES  | MUL | NULL    |                |
+| alamat    | text                          | YES  |     | NULL    |                |
++-----------+-------------------------------+------+-----+---------+----------------+
+9 rows in set (0.029 sec)
+
+9. Tampilkan tabel-tabel yang ada di dbpegawai
+
+MariaDB [dbpegawai]> SHOW TABLES;
++---------------------+
+| Tables_in_dbpegawai |
++---------------------+
+| divisi              |
+| jabatan             |
+| pegawai             |
++---------------------+
+3 rows in set (0.010 sec)
+
+10. Input data divisi => SDM, Keuangan, Marketing, IT
+
+MariaDB [dbpegawai]> INSERT INTO divisi values('1','SDM');
+Query OK, 1 row affected (0.005 sec)
+
+MariaDB [dbpegawai]> INSERT INTO divisi values('2','KEUANGAN');
+Query OK, 1 row affected (0.010 sec)
+
+MariaDB [dbpegawai]> INSERT INTO divisi values('3','MARKETING');
+Query OK, 1 row affected (0.013 sec)
+
+MariaDB [dbpegawai]> INSERT INTO divisi values('4','IT');
+Query OK, 1 row affected (0.011 sec)
+
+11. Tampilkan seluruh data divisi
+
+MariaDB [dbpegawai]> SELECT * FROM divisi;
++----+-----------+
+| id | nama      |
++----+-----------+
+|  4 | IT        |
+|  2 | KEUANGAN  |
+|  3 | MARKETING |
+|  1 | SDM       |
++----+-----------+
+4 rows in set (0.001 sec)
+
+12. Input data jabatan => Direktur, Manajer, Asisten Manajer, Staff
+
+MariaDB [dbpegawai]> INSERT INTO jabatan values('1','DIRECTUR');
+Query OK, 1 row affected (0.011 sec)
+
+MariaDB [dbpegawai]> INSERT INTO jabatan values('2','MANAJER');
+Query OK, 1 row affected (0.010 sec)
+
+MariaDB [dbpegawai]> INSERT INTO jabatan values('3','ASISTEN MANAJER');
+Query OK, 1 row affected (0.010 sec)
+
+MariaDB [dbpegawai]> INSERT INTO jabatan values('4','STAFF');
+Query OK, 1 row affected (0.010 sec)
+
+13. Tampilkan seluruh data jabatan 
+
+MariaDB [dbpegawai]> SELECT * FROM jabatan;
++----+-----------------+
+| id | nama            |
++----+-----------------+
+|  3 | ASISTEN MANAJER |
+|  1 | DIRECTUR        |
+|  2 | MANAJER         |
+|  4 | STAFF           |
++----+-----------------+
+4 rows in set (0.000 sec)
+
+14. Input 20 orang pegawai ( 1 divisi 5 orang, untuk gender dan jabatan diacak)
+
+MariaDB [dbpegawai]> insert into pegawai(id, nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat)values
+    -> (2,'0002','Anisa', 'Perempuan', 'depok', '2006-07-24', 1, 2, 'jakarta'),
+    -> (3,'0003','Tri Ayu Lestari', 'Perempuan', 'depok', '2005-05-03', 1, 3, 'Depok'),
+    -> (4,'0004','Auliya Nisya', 'Perempuan', 'depok', '2005-09-15', 1, 4, 'jakarta'),
+    -> (5,'0005','Firmansyah Dzakwan', 'Laki-laki', 'depok', '2004-03-04', 1, 1, 'sumatera barat');
+Query OK, 4 rows affected (0.009 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> insert into pegawai(id, nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat)values
+    -> (6,'0006','Ferisha Adilla', 'Perempuan', 'depok', '2005-11-23', 2, 1, 'Jawa timur'),
+    -> (7,'0007','Siti Fathya', 'Perempuan', 'jakarta', '2003-05-10', 2, 2, 'depok'),
+    -> (8,'0008','elyas', 'Laki-laki', 'bandung', '1999-01-10', 2, 3, 'jogja'),
+    -> (9,'0009','ilyas', 'Laki-laki', 'bogor', '1998-02-21', 2, 4, 'jogja'),
+    -> (10,'0010','muhammad iqbal', 'Laki-laki', 'makasar', '2001-08-30', 2, 1, 'bandung');
+Query OK, 5 rows affected (0.011 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> insert into pegawai(id, nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat)values
+    -> (11,'0011','Asep diki maulana', 'Laki-laki', 'depok', '1999-12-16', 3, 1, 'sulawesi selatan'),
+    -> (12,'0012','Off Jumpol', 'Laki-laki', 'depok', '2005-10-18', 3, 2, 'depok'),
+    -> (13,'0013','yusran arsy', 'Laki-laki', 'dago', '2003-11-22', 3, 3, 'depok'),
+    -> (14,'0014','muhammad santoso', 'Laki-laki', 'bogor', '2003-12-31', 3, 4, 'citayem'),
+    -> (15,'0015','abdurrahman', 'Laki-laki', 'depok', '2002-02-21', 3, 2, 'cibinong');
+Query OK, 5 rows affected (0.011 sec)
+
+MariaDB [dbpegawai]> insert into pegawai(id, nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat)values
+    -> (16,'0016','siti nurhasanah', 'perempuan', 'kalimantan', '2001-11-07', 4, 1, 'jawa tengah'),
+    -> (17,'0017','agus rianto', 'Laki-laki', 'depok', '1998-01-15', 4, 2, 'jawa barat'),
+    -> (18,'0018','alimaya', 'perempuan', 'depok', '1998-12-22', 4, 3, 'jawa timur'),
+    -> (19,'0019','muhammad ridho', 'laki-laki', 'jakarta', '2001-10-22', 4, 4, 'jakarta selatan'),
+    -> (20,'0020','muhammad riziq', 'laki-laki', 'depok', '2009-09-19', 4, 3, 'depok');
+Query OK, 5 rows affected (0.011 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+15. Tampilkan seluruh data pegawai
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+------+--------------------+-----------+------------+------------+----------+-----------+------------------+
+| id | nip  | nama               | gender    | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat           |
++----+------+--------------------+-----------+------------+------------+----------+-----------+------------------+
+|  1 | 0001 | Umu Habibah        | Perempuan | Jakarta    | 2004-12-16 |        1 |         1 | Depok            |
+|  2 | 0002 | Anisa              | Perempuan | depok      | 2006-07-24 |        1 |         2 | jakarta          |
+|  3 | 0003 | Tri Ayu Lestari    | Perempuan | depok      | 2005-05-03 |        1 |         3 | Depok            |
+|  4 | 0004 | Auliya Nisya       | Perempuan | depok      | 2005-09-15 |        1 |         4 | jakarta          |
+|  5 | 0005 | Firmansyah Dzakwan | Laki-laki | depok      | 2004-03-04 |        1 |         1 | sumatera barat   |
+|  6 | 0006 | Ferisha Adilla     | Perempuan | depok      | 2005-11-23 |        2 |         1 | Jawa timur       |
+|  7 | 0007 | Siti Fathya        | Perempuan | jakarta    | 2003-05-10 |        2 |         2 | depok            |
+|  8 | 0008 | elyas              | Laki-laki | bandung    | 1999-01-10 |        2 |         3 | jogja            |
+|  9 | 0009 | ilyas              | Laki-laki | bogor      | 1998-02-21 |        2 |         4 | jogja            |
+| 10 | 0010 | muhammad iqbal     | Laki-laki | makasar    | 2001-08-30 |        2 |         1 | bandung          |
+| 11 | 0011 | Asep diki maulana  | Laki-laki | depok      | 1999-12-16 |        3 |         1 | sulawesi selatan |
+| 12 | 0012 | Off Jumpol         | Laki-laki | depok      | 2005-10-18 |        3 |         2 | depok            |
+| 13 | 0013 | yusran arsy        | Laki-laki | dago       | 2003-11-22 |        3 |         3 | depok            |
+| 14 | 0014 | muhammad santoso   | Laki-laki | bogor      | 2003-12-31 |        3 |         4 | citayem          |
+| 15 | 0015 | abdurrahman        | Laki-laki | depok      | 2002-02-21 |        3 |         2 | cibinong         |
+| 16 | 0016 | siti nurhasanah    | Perempuan | kalimantan | 2001-11-07 |        4 |         1 | jawa tengah      |
+| 17 | 0017 | agus rianto        | Laki-laki | depok      | 1998-01-15 |        4 |         2 | jawa barat       |
+| 18 | 0018 | alimaya            | Perempuan | depok      | 1998-12-22 |        4 |         3 | jawa timur       |
+| 19 | 0019 | muhammad ridho     | Laki-laki | jakarta    | 2001-10-22 |        4 |         4 | jakarta selatan  |
+| 20 | 0020 | muhammad riziq     | Laki-laki | depok      | 2009-09-19 |        4 |         3 | depok            |
++----+------+--------------------+-----------+------------+------------+----------+-----------+------------------+
+20 rows in set (0.001 sec)
+
+16. Ubah data 5 orang pegawai (dengan ketentuan ubah 3 kolom(bebas)) 
+
+MariaDB [dbpegawai]> update pegawai
+    -> SET tmp_lahir = 'bandung', idjabatan = 2, alamat = 'solo'
+    -> WHERE id IN (13,16,03,04,20);
+Query OK, 5 rows affected (0.036 sec)
+Rows matched: 5  Changed: 5  Warnings: 0
+
+17. Hapus 2 orang pegawai pegawai terakhir
+
+MariaDB [dbpegawai]> DELETE FROM pegawai
+    -> ORDER BY id DESC
+    -> LIMIT 2;
+Query OK, 2 rows affected (0.010 sec)
+
+18. Gunakan alter tabel pada tabel pegawai untuk menambahkan kolom baru berat_badan dengan
+tipe data float wajib diisi, lalu input berat badan semua pegawai secara acak
+
+MariaDB [dbpegawai]> ALTER TABLE pegawai
+    -> ADD COLUMN IF NOT EXISTS
+    -> berat_badan FLOAT NOT NULL;
+Query OK, 0 rows affected (0.025 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = FLOOR(RAND() * 30) + 40;
+Query OK, 18 rows affected (0.010 sec)
+Rows matched: 18  Changed: 18  Warnings: 0
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+------+--------------------+-----------+-----------+------------+----------+-----------+------------------+-------------+
+| id | nip  | nama               | gender    | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan |
++----+------+--------------------+-----------+-----------+------------+----------+-----------+------------------+-------------+
+|  1 | 0001 | Umu Habibah        | Perempuan | Jakarta   | 2004-12-16 |        1 |         1 | Depok            |          59 |
+|  2 | 0002 | Anisa              | Perempuan | depok     | 2006-07-24 |        1 |         2 | jakarta          |          42 |
+|  3 | 0003 | Tri Ayu Lestari    | Perempuan | bandung   | 2005-05-03 |        1 |         2 | solo             |          54 |
+|  4 | 0004 | Auliya Nisya       | Perempuan | bandung   | 2005-09-15 |        1 |         2 | solo             |          44 |
+|  5 | 0005 | Firmansyah Dzakwan | Laki-laki | depok     | 2004-03-04 |        1 |         1 | sumatera barat   |          49 |
+|  6 | 0006 | Ferisha Adilla     | Perempuan | depok     | 2005-11-23 |        2 |         1 | Jawa timur       |          41 |
+|  7 | 0007 | Siti Fathya        | Perempuan | jakarta   | 2003-05-10 |        2 |         2 | depok            |          51 |
+|  8 | 0008 | elyas              | Laki-laki | bandung   | 1999-01-10 |        2 |         3 | jogja            |          63 |
+|  9 | 0009 | ilyas              | Laki-laki | bogor     | 1998-02-21 |        2 |         4 | jogja            |          61 |
+| 10 | 0010 | muhammad iqbal     | Laki-laki | makasar   | 2001-08-30 |        2 |         1 | bandung          |          46 |
+| 11 | 0011 | Asep diki maulana  | Laki-laki | depok     | 1999-12-16 |        3 |         1 | sulawesi selatan |          68 |
+| 12 | 0012 | Off Jumpol         | Laki-laki | depok     | 2005-10-18 |        3 |         2 | depok            |          41 |
+| 13 | 0013 | yusran arsy        | Laki-laki | bandung   | 2003-11-22 |        3 |         2 | solo             |          52 |
+| 14 | 0014 | muhammad santoso   | Laki-laki | bogor     | 2003-12-31 |        3 |         4 | citayem          |          66 |
+| 15 | 0015 | abdurrahman        | Laki-laki | depok     | 2002-02-21 |        3 |         2 | cibinong         |          46 |
+| 16 | 0016 | siti nurhasanah    | Perempuan | bandung   | 2001-11-07 |        4 |         2 | solo             |          54 |
+| 17 | 0017 | agus rianto        | Laki-laki | depok     | 1998-01-15 |        4 |         2 | jawa barat       |          61 |
+| 18 | 0018 | alimaya            | Perempuan | depok     | 1998-12-22 |        4 |         3 | jawa timur       |          43 |
++----+------+--------------------+-----------+-----------+------------+----------+-----------+------------------+-------------+
+18 rows in set (0.001 sec)
+
+19. Gunakan alter tabel pada tabel pegawai untuk menambahkan kolom baru umur dengan tipe data
+integer wajib diisi, lalu input umur semua pegawai secara acak
+
+MariaDB [dbpegawai]> ALTER TABLE pegawai
+    -> ADD COLUMN IF NOT EXISTS
+    -> umur INT NOT NULL;
+Query OK, 0 rows affected (0.009 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET umur = FLOOR(RAND() * 30) + 20;
+Query OK, 18 rows affected (0.010 sec)
+Rows matched: 18  Changed: 18  Warnings: 0
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+------+--------------------+-----------+-----------+------------+----------+-----------+------------------+-------------+------+
+| id | nip  | nama               | gender    | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan | umur |
++----+------+--------------------+-----------+-----------+------------+----------+-----------+------------------+-------------+------+
+|  1 | 0001 | Umu Habibah        | Perempuan | Jakarta   | 2004-12-16 |        1 |         1 | Depok            |          59 |   34 |
+|  2 | 0002 | Anisa              | Perempuan | depok     | 2006-07-24 |        1 |         2 | jakarta          |          42 |   49 |
+|  3 | 0003 | Tri Ayu Lestari    | Perempuan | bandung   | 2005-05-03 |        1 |         2 | solo             |          54 |   36 |
+|  4 | 0004 | Auliya Nisya       | Perempuan | bandung   | 2005-09-15 |        1 |         2 | solo             |          44 |   43 |
+|  5 | 0005 | Firmansyah Dzakwan | Laki-laki | depok     | 2004-03-04 |        1 |         1 | sumatera barat   |          49 |   26 |
+|  6 | 0006 | Ferisha Adilla     | Perempuan | depok     | 2005-11-23 |        2 |         1 | Jawa timur       |          41 |   41 |
+|  7 | 0007 | Siti Fathya        | Perempuan | jakarta   | 2003-05-10 |        2 |         2 | depok            |          51 |   48 |
+|  8 | 0008 | elyas              | Laki-laki | bandung   | 1999-01-10 |        2 |         3 | jogja            |          63 |   39 |
+|  9 | 0009 | ilyas              | Laki-laki | bogor     | 1998-02-21 |        2 |         4 | jogja            |          61 |   31 |
+| 10 | 0010 | muhammad iqbal     | Laki-laki | makasar   | 2001-08-30 |        2 |         1 | bandung          |          46 |   20 |
+| 11 | 0011 | Asep diki maulana  | Laki-laki | depok     | 1999-12-16 |        3 |         1 | sulawesi selatan |          68 |   46 |
+| 12 | 0012 | Off Jumpol         | Laki-laki | depok     | 2005-10-18 |        3 |         2 | depok            |          41 |   29 |
+| 13 | 0013 | yusran arsy        | Laki-laki | bandung   | 2003-11-22 |        3 |         2 | solo             |          52 |   48 |
+| 14 | 0014 | muhammad santoso   | Laki-laki | bogor     | 2003-12-31 |        3 |         4 | citayem          |          66 |   43 |
+| 15 | 0015 | abdurrahman        | Laki-laki | depok     | 2002-02-21 |        3 |         2 | cibinong         |          46 |   21 |
+| 16 | 0016 | siti nurhasanah    | Perempuan | bandung   | 2001-11-07 |        4 |         2 | solo             |          54 |   49 |
+| 17 | 0017 | agus rianto        | Laki-laki | depok     | 1998-01-15 |        4 |         2 | jawa barat       |          61 |   42 |
+| 18 | 0018 | alimaya            | Perempuan | depok     | 1998-12-22 |        4 |         3 | jawa timur       |          43 |   42 |
++----+------+--------------------+-----------+-----------+------------+----------+-----------+------------------+-------------+------+
+18 rows in set (0.000 sec)
+
+20. Gunakan alter tabel pada tabel pegawai untuk mengubah nama kolom gender menjadi
+jenis_kelamin
+
+
+MariaDB [dbpegawai]> ALTER TABLE pegawai
+    -> CHANGE COLUMN gender janis_kelamin ENUM('Laki-laki','Perempuan') NOT NULL;
+Query OK, 0 rows affected (0.017 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+21. Tampilkan kolom2 tertentu di tabel pegawai (nip,nama,jenis_kelamin,alamat)
+
+MariaDB [dbpegawai]> SELECT nip, nama, janis_kelamin, alamat FROM pegawai;
++------+--------------------+---------------+------------------+
+| nip  | nama               | janis_kelamin | alamat           |
++------+--------------------+---------------+------------------+
+| 0001 | Umu Habibah        | Perempuan     | Depok            |
+| 0002 | Anisa              | Perempuan     | jakarta          |
+| 0003 | Tri Ayu Lestari    | Perempuan     | solo             |
+| 0004 | Auliya Nisya       | Perempuan     | solo             |
+| 0005 | Firmansyah Dzakwan | Laki-laki     | sumatera barat   |
+| 0006 | Ferisha Adilla     | Perempuan     | Jawa timur       |
+| 0007 | Siti Fathya        | Perempuan     | depok            |
+| 0008 | elyas              | Laki-laki     | jogja            |
+| 0009 | ilyas              | Laki-laki     | jogja            |
+| 0010 | muhammad iqbal     | Laki-laki     | bandung          |
+| 0011 | Asep diki maulana  | Laki-laki     | sulawesi selatan |
+| 0012 | Off Jumpol         | Laki-laki     | depok            |
+| 0013 | yusran arsy        | Laki-laki     | solo             |
+| 0014 | muhammad santoso   | Laki-laki     | citayem          |
+| 0015 | abdurrahman        | Laki-laki     | cibinong         |
+| 0016 | siti nurhasanah    | Perempuan     | solo             |
+| 0017 | agus rianto        | Laki-laki     | jawa barat       |
+| 0018 | alimaya            | Perempuan     | jawa timur       |
++------+--------------------+---------------+------------------+
+18 rows in set (0.000 sec)
+
+22. Tampilkan baris2 tertentu di tabel pegawai (yang gendernya laki2 saja) 
+
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE Jenis_kelamin = 'Laki-laki';
++----+------+--------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+| id | nip  | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan | umur |
++----+------+--------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+|  5 | 0005 | Firmansyah Dzakwan | Laki-laki     | depok     | 2004-03-04 |        1 |         1 | sumatera barat   |          49 |   26 |
+|  8 | 0008 | elyas              | Laki-laki     | bandung   | 1999-01-10 |        2 |         3 | jogja            |          63 |   39 |
+|  9 | 0009 | ilyas              | Laki-laki     | bogor     | 1998-02-21 |        2 |         4 | jogja            |          61 |   31 |
+| 10 | 0010 | muhammad iqbal     | Laki-laki     | makasar   | 2001-08-30 |        2 |         1 | bandung          |          46 |   20 |
+| 11 | 0011 | Asep diki maulana  | Laki-laki     | depok     | 1999-12-16 |        3 |         1 | sulawesi selatan |          68 |   46 |
+| 12 | 0012 | Off Jumpol         | Laki-laki     | depok     | 2005-10-18 |        3 |         2 | depok            |          41 |   29 |
+| 13 | 0013 | yusran arsy        | Laki-laki     | bandung   | 2003-11-22 |        3 |         2 | solo             |          52 |   48 |
+| 14 | 0014 | muhammad santoso   | Laki-laki     | bogor     | 2003-12-31 |        3 |         4 | citayem          |          66 |   43 |
+| 15 | 0015 | abdurrahman        | Laki-laki     | depok     | 2002-02-21 |        3 |         2 | cibinong         |          46 |   21 |
+| 17 | 0017 | agus rianto        | Laki-laki     | depok     | 1998-01-15 |        4 |         2 | jawa barat       |          61 |   42 |
++----+------+--------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+10 rows in set (0.004 sec)
+
+23. Tampilkan baris2 tertentu di tabel pegawai (yang bekerja di divisi IT dan gendernya perempuan)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE iddivisi = 4  AND jenis_kelamin = 'perempuan' ;
++----+------+-----------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+| id | nip  | nama            | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat     | berat_badan | umur |
++----+------+-----------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+| 16 | 0016 | siti nurhasanah | Perempuan     | bandung   | 2001-11-07 |        4 |         2 | solo       |          54 |   49 |
+| 18 | 0018 | alimaya         | Perempuan     | depok     | 1998-12-22 |        4 |         3 | jawa timur |          43 |   42 |
++----+------+-----------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+2 rows in set (0.011 sec)
+
+
+24. Tampilkan data pegawai yang umurnya di atas 30 tahun dan lahirnya di kota jakarta dengan
+klausa WHERE, AND
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE umur > 30 AND tmp_lahir = 'jakarta';
++----+------+-------------+---------------+-----------+------------+----------+-----------+--------+-------------+------+
+| id | nip  | nama        | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat | berat_badan | umur |
++----+------+-------------+---------------+-----------+------------+----------+-----------+--------+-------------+------+
+|  1 | 0001 | Umu Habibah | Perempuan     | Jakarta   | 2004-12-16 |        1 |         1 | Depok  |          59 |   34 |
+|  7 | 0007 | Siti Fathya | Perempuan     | jakarta   | 2003-05-10 |        2 |         2 | depok  |          51 |   48 |
++----+------+-------------+---------------+-----------+------------+----------+-----------+--------+-------------+------+
+2 rows in set (0.003 sec)
+
+
+25. Tampilkan data pegawai yang bekerja pada divisi marketing, berumur lebih dari 30 tahun dan
+berjenis kelamin perempuan dengan klausa WHERE, AND 
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE iddivisi > 3 AND umur > 30 AND jenis_kelamin = 'Perempuan';
++----+------+-----------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+| id | nip  | nama            | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat     | berat_badan | umur |
++----+------+-----------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+| 16 | 0016 | siti nurhasanah | Perempuan     | bandung   | 2001-11-07 |        4 |         2 | solo       |          54 |   49 |
+| 18 | 0018 | alimaya         | Perempuan     | depok     | 1998-12-22 |        4 |         3 | jawa timur |          43 |   42 |
++----+------+-----------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+2 rows in set (0.001 sec)
+
+26. Tampilkan data pegawai dengan klausa key (nip)
+
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE nip = '0001';
++----+------+-------------+---------------+-----------+------------+----------+-----------+--------+-------------+------+
+| id | nip  | nama        | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat | berat_badan | umur |
++----+------+-------------+---------------+-----------+------------+----------+-----------+--------+-------------+------+
+|  1 | 0001 | Umu Habibah | Perempuan     | Jakarta   | 2004-12-16 |        1 |         1 | Depok  |          59 |   34 |
++----+------+-------------+---------------+-----------+------------+----------+-----------+--------+-------------+------+
+1 row in set (0.001 sec)
+
+27. Tampilkan data pegawai dengan klausa non key (gender)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE Jenis_kelamin = 'Perempuan';
++----+------+-----------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+| id | nip  | nama            | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat     | berat_badan | umur |
++----+------+-----------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+|  1 | 0001 | Umu Habibah     | Perempuan     | Jakarta   | 2004-12-16 |        1 |         1 | Depok      |          59 |   34 |
+|  2 | 0002 | Anisa           | Perempuan     | depok     | 2006-07-24 |        1 |         2 | jakarta    |          42 |   49 |
+|  3 | 0003 | Tri Ayu Lestari | Perempuan     | bandung   | 2005-05-03 |        1 |         2 | solo       |          54 |   36 |
+|  4 | 0004 | Auliya Nisya    | Perempuan     | bandung   | 2005-09-15 |        1 |         2 | solo       |          44 |   43 |
+|  6 | 0006 | Ferisha Adilla  | Perempuan     | depok     | 2005-11-23 |        2 |         1 | Jawa timur |          41 |   41 |
+|  7 | 0007 | Siti Fathya     | Perempuan     | jakarta   | 2003-05-10 |        2 |         2 | depok      |          51 |   48 |
+| 16 | 0016 | siti nurhasanah | Perempuan     | bandung   | 2001-11-07 |        4 |         2 | solo       |          54 |   49 |
+| 18 | 0018 | alimaya         | Perempuan     | depok     | 1998-12-22 |        4 |         3 | jawa timur |          43 |   42 |
++----+------+-----------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+8 rows in set (0.000 sec)
+
+
+28. Tampilkan data pegawai dengan klausa in (menyebutkan beberapa nip) 
+
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE nip IN ('0001','0002','0003','0004','0005');
++----+------+--------------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+| id | nip  | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat         | berat_badan | umur |
++----+------+--------------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+|  1 | 0001 | Umu Habibah        | Perempuan     | Jakarta   | 2004-12-16 |        1 |         1 | Depok          |          59 |   34 |
+|  2 | 0002 | Anisa              | Perempuan     | depok     | 2006-07-24 |        1 |         2 | jakarta        |          42 |   49 |
+|  3 | 0003 | Tri Ayu Lestari    | Perempuan     | bandung   | 2005-05-03 |        1 |         2 | solo           |          54 |   36 |
+|  4 | 0004 | Auliya Nisya       | Perempuan     | bandung   | 2005-09-15 |        1 |         2 | solo           |          44 |   43 |
+|  5 | 0005 | Firmansyah Dzakwan | Laki-laki     | depok     | 2004-03-04 |        1 |         1 | sumatera barat |          49 |   26 |
++----+------+--------------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+5 rows in set (0.009 sec)
+
+29. Tampilkan data pegawai dengan klausa not in (menyebutkan beberapa tempat lahir)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE tmp_lahir NOT IN('solo','jakarta','makasar');
++----+------+--------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+| id | nip  | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan | umur |
++----+------+--------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+|  2 | 0002 | Anisa              | Perempuan     | depok     | 2006-07-24 |        1 |         2 | jakarta          |          42 |   49 |
+|  3 | 0003 | Tri Ayu Lestari    | Perempuan     | bandung   | 2005-05-03 |        1 |         2 | solo             |          54 |   36 |
+|  4 | 0004 | Auliya Nisya       | Perempuan     | bandung   | 2005-09-15 |        1 |         2 | solo             |          44 |   43 |
+|  5 | 0005 | Firmansyah Dzakwan | Laki-laki     | depok     | 2004-03-04 |        1 |         1 | sumatera barat   |          49 |   26 |
+|  6 | 0006 | Ferisha Adilla     | Perempuan     | depok     | 2005-11-23 |        2 |         1 | Jawa timur       |          41 |   41 |
+|  8 | 0008 | elyas              | Laki-laki     | bandung   | 1999-01-10 |        2 |         3 | jogja            |          63 |   39 |
+|  9 | 0009 | ilyas              | Laki-laki     | bogor     | 1998-02-21 |        2 |         4 | jogja            |          61 |   31 |
+| 11 | 0011 | Asep diki maulana  | Laki-laki     | depok     | 1999-12-16 |        3 |         1 | sulawesi selatan |          68 |   46 |
+| 12 | 0012 | Off Jumpol         | Laki-laki     | depok     | 2005-10-18 |        3 |         2 | depok            |          41 |   29 |
+| 13 | 0013 | yusran arsy        | Laki-laki     | bandung   | 2003-11-22 |        3 |         2 | solo             |          52 |   48 |
+| 14 | 0014 | muhammad santoso   | Laki-laki     | bogor     | 2003-12-31 |        3 |         4 | citayem          |          66 |   43 |
+| 15 | 0015 | abdurrahman        | Laki-laki     | depok     | 2002-02-21 |        3 |         2 | cibinong         |          46 |   21 |
+| 16 | 0016 | siti nurhasanah    | Perempuan     | bandung   | 2001-11-07 |        4 |         2 | solo             |          54 |   49 |
+| 17 | 0017 | agus rianto        | Laki-laki     | depok     | 1998-01-15 |        4 |         2 | jawa barat       |          61 |   42 |
+| 18 | 0018 | alimaya            | Perempuan     | depok     | 1998-12-22 |        4 |         3 | jawa timur       |          43 |   42 |
++----+------+--------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+15 rows in set (0.001 sec)
+
+30. Tampilkan data pegawai berdasarkan nama secara ascending
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> ORDER BY nama;
++----+------+--------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+| id | nip  | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan | umur |
++----+------+--------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+| 15 | 0015 | abdurrahman        | Laki-laki     | depok     | 2002-02-21 |        3 |         2 | cibinong         |          46 |   21 |
+| 17 | 0017 | agus rianto        | Laki-laki     | depok     | 1998-01-15 |        4 |         2 | jawa barat       |          61 |   42 |
+| 18 | 0018 | alimaya            | Perempuan     | depok     | 1998-12-22 |        4 |         3 | jawa timur       |          43 |   42 |
+|  2 | 0002 | Anisa              | Perempuan     | depok     | 2006-07-24 |        1 |         2 | jakarta          |          42 |   49 |
+| 11 | 0011 | Asep diki maulana  | Laki-laki     | depok     | 1999-12-16 |        3 |         1 | sulawesi selatan |          68 |   46 |
+|  4 | 0004 | Auliya Nisya       | Perempuan     | bandung   | 2005-09-15 |        1 |         2 | solo             |          44 |   43 |
+|  8 | 0008 | elyas              | Laki-laki     | bandung   | 1999-01-10 |        2 |         3 | jogja            |          63 |   39 |
+|  6 | 0006 | Ferisha Adilla     | Perempuan     | depok     | 2005-11-23 |        2 |         1 | Jawa timur       |          41 |   41 |
+|  5 | 0005 | Firmansyah Dzakwan | Laki-laki     | depok     | 2004-03-04 |        1 |         1 | sumatera barat   |          49 |   26 |
+|  9 | 0009 | ilyas              | Laki-laki     | bogor     | 1998-02-21 |        2 |         4 | jogja            |          61 |   31 |
+| 10 | 0010 | muhammad iqbal     | Laki-laki     | makasar   | 2001-08-30 |        2 |         1 | bandung          |          46 |   20 |
+| 14 | 0014 | muhammad santoso   | Laki-laki     | bogor     | 2003-12-31 |        3 |         4 | citayem          |          66 |   43 |
+| 12 | 0012 | Off Jumpol         | Laki-laki     | depok     | 2005-10-18 |        3 |         2 | depok            |          41 |   29 |
+|  7 | 0007 | Siti Fathya        | Perempuan     | jakarta   | 2003-05-10 |        2 |         2 | depok            |          51 |   48 |
+| 16 | 0016 | siti nurhasanah    | Perempuan     | bandung   | 2001-11-07 |        4 |         2 | solo             |          54 |   49 |
+|  3 | 0003 | Tri Ayu Lestari    | Perempuan     | bandung   | 2005-05-03 |        1 |         2 | solo             |          54 |   36 |
+|  1 | 0001 | Umu Habibah        | Perempuan     | Jakarta   | 2004-12-16 |        1 |         1 | Depok            |          59 |   34 |
+| 13 | 0013 | yusran arsy        | Laki-laki     | bandung   | 2003-11-22 |        3 |         2 | solo             |          52 |   48 |
++----+------+--------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+18 rows in set (0.002 sec)
+
+31. Tampilkan data pegawai dari yang berat badan paling gemuk ke paling kurus
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> ORDER BY berat_badan DESC;
++----+------+--------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+| id | nip  | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan | umur |
++----+------+--------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+| 11 | 0011 | Asep diki maulana  | Laki-laki     | depok     | 1999-12-16 |        3 |         1 | sulawesi selatan |          68 |   46 |
+| 14 | 0014 | muhammad santoso   | Laki-laki     | bogor     | 2003-12-31 |        3 |         4 | citayem          |          66 |   43 |
+|  8 | 0008 | elyas              | Laki-laki     | bandung   | 1999-01-10 |        2 |         3 | jogja            |          63 |   39 |
+|  9 | 0009 | ilyas              | Laki-laki     | bogor     | 1998-02-21 |        2 |         4 | jogja            |          61 |   31 |
+| 17 | 0017 | agus rianto        | Laki-laki     | depok     | 1998-01-15 |        4 |         2 | jawa barat       |          61 |   42 |
+|  1 | 0001 | Umu Habibah        | Perempuan     | Jakarta   | 2004-12-16 |        1 |         1 | Depok            |          59 |   34 |
+|  3 | 0003 | Tri Ayu Lestari    | Perempuan     | bandung   | 2005-05-03 |        1 |         2 | solo             |          54 |   36 |
+| 16 | 0016 | siti nurhasanah    | Perempuan     | bandung   | 2001-11-07 |        4 |         2 | solo             |          54 |   49 |
+| 13 | 0013 | yusran arsy        | Laki-laki     | bandung   | 2003-11-22 |        3 |         2 | solo             |          52 |   48 |
+|  7 | 0007 | Siti Fathya        | Perempuan     | jakarta   | 2003-05-10 |        2 |         2 | depok            |          51 |   48 |
+|  5 | 0005 | Firmansyah Dzakwan | Laki-laki     | depok     | 2004-03-04 |        1 |         1 | sumatera barat   |          49 |   26 |
+| 10 | 0010 | muhammad iqbal     | Laki-laki     | makasar   | 2001-08-30 |        2 |         1 | bandung          |          46 |   20 |
+| 15 | 0015 | abdurrahman        | Laki-laki     | depok     | 2002-02-21 |        3 |         2 | cibinong         |          46 |   21 |
+|  4 | 0004 | Auliya Nisya       | Perempuan     | bandung   | 2005-09-15 |        1 |         2 | solo             |          44 |   43 |
+| 18 | 0018 | alimaya            | Perempuan     | depok     | 1998-12-22 |        4 |         3 | jawa timur       |          43 |   42 |
+|  2 | 0002 | Anisa              | Perempuan     | depok     | 2006-07-24 |        1 |         2 | jakarta          |          42 |   49 |
+|  6 | 0006 | Ferisha Adilla     | Perempuan     | depok     | 2005-11-23 |        2 |         1 | Jawa timur       |          41 |   41 |
+| 12 | 0012 | Off Jumpol         | Laki-laki     | depok     | 2005-10-18 |        3 |         2 | depok            |          41 |   29 |
++----+------+--------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+18 rows in set (0.001 sec)
+
+
+32. Tampilkan data 5 pegawai teratas gunakan klausa limit
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> LIMIT 5;
++----+------+--------------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+| id | nip  | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat         | berat_badan | umur |
++----+------+--------------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+|  1 | 0001 | Umu Habibah        | Perempuan     | Jakarta   | 2004-12-16 |        1 |         1 | Depok          |          59 |   34 |
+|  2 | 0002 | Anisa              | Perempuan     | depok     | 2006-07-24 |        1 |         2 | jakarta        |          42 |   49 |
+|  3 | 0003 | Tri Ayu Lestari    | Perempuan     | bandung   | 2005-05-03 |        1 |         2 | solo           |          54 |   36 |
+|  4 | 0004 | Auliya Nisya       | Perempuan     | bandung   | 2005-09-15 |        1 |         2 | solo           |          44 |   43 |
+|  5 | 0005 | Firmansyah Dzakwan | Laki-laki     | depok     | 2004-03-04 |        1 |         1 | sumatera barat |          49 |   26 |
++----+------+--------------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+5 rows in set (0.000 sec)
+
+33. Tampilkan data 5 pegawai terbawah gunakan klausa limit offset
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> LIMIT 5 offset 10;
++----+------+-------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+| id | nip  | nama              | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan | umur |
++----+------+-------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+| 11 | 0011 | Asep diki maulana | Laki-laki     | depok     | 1999-12-16 |        3 |         1 | sulawesi selatan |          68 |   46 |
+| 12 | 0012 | Off Jumpol        | Laki-laki     | depok     | 2005-10-18 |        3 |         2 | depok            |          41 |   29 |
+| 13 | 0013 | yusran arsy       | Laki-laki     | bandung   | 2003-11-22 |        3 |         2 | solo             |          52 |   48 |
+| 14 | 0014 | muhammad santoso  | Laki-laki     | bogor     | 2003-12-31 |        3 |         4 | citayem          |          66 |   43 |
+| 15 | 0015 | abdurrahman       | Laki-laki     | depok     | 2002-02-21 |        3 |         2 | cibinong         |          46 |   21 |
++----+------+-------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+5 rows in set (0.009 sec)
+
+34. Tampilkan jumlah pegawai gunakan fungsi aggregrat count
+
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai FROM pegawai;
++----------------+
+| jumlah_pegawai |
++----------------+
+|             18 |
++----------------+
+1 row in set (0.002 sec)
+
+35. Tampilkan nip,nama pegawai, umur yg paling tua gunakan fungsi aggregrat max (kombinasi
+dengan sub query) 
+
+MariaDB [dbpegawai]> SELECT nip,nama,umur FROM pegawai WHERE umur =(SELECT MAX(umur) FROM pegawai);
++------+-----------------+------+
+| nip  | nama            | umur |
++------+-----------------+------+
+| 0002 | Anisa           |   49 |
+| 0016 | siti nurhasanah |   49 |
++------+-----------------+------+
+2 rows in set (0.004 sec)
+
+36. Tampilkan nip,nama pegawai, berat_badan yg paling kurus gunakan fungsi aggregrat min
+(kombinasi dengan sub query)
+
+MariaDB [dbpegawai]> SELECT nip,nama,umur FROM pegawai WHERE berat_badan =(SELECT MIN(berat_badan) FROM pegawai);
++------+----------------+------+
+| nip  | nama           | umur |
++------+----------------+------+
+| 0006 | Ferisha Adilla |   41 |
+| 0012 | Off Jumpol     |   29 |
++------+----------------+------+
+2 rows in set (0.001 sec)
+
+37. Tampilkan data rata2 umur pegawai gunakan fungsi aggregrat avg
+
+MariaDB [dbpegawai]> SELECT AVG(umur) AS umur_rata2 FROM pegawai;
++------------+
+| umur_rata2 |
++------------+
+|    38.1667 |
++------------+
+1 row in set (0.008 sec)
+
+38. Tampilkan jumlah data pegawai yang laki2 dan berumur lebih dari 40 tahun dan berjabatan
+Manajer, gunakan fungsi aggregrat count dan klausa AND 
+
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jml_manajer FROM pegawai
+    -> WHERE jenis_kelamin = 'Laki-laki' AND umur > 40 AND idjabatan = 2;
++-------------+
+| jml_manajer |
++-------------+
+|           2 |
++-------------+
+1 row in set (0.001 sec)
+
+39. Tampilkan jumlah data pegawai yang perempuan dan berumur kurang dari 40 tahun dan
+berjabatan Staff, gunakan fungsi aggregrat count dan klausa AND 
+
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jml_staff_perempuan FROM pegawai
+    -> WHERE jenis_kelamin = 'Perempuan' AND umur > 40 AND idjabatan = 4;
++---------------------+
+| jml_staff_perempuan |
++---------------------+
+|                   0 |
++---------------------+
+1 row in set (0.000 sec)
+
+40. Tampilkan jumlah data pegawai yang perempuan gunakan fungsi aggregrat count 2
+
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jml_karyawam_perempuan FROM pegawai
+    -> WHERE jenis_kelamin = 'Perempuan';
++------------------------+
+| jml_karyawam_perempuan |
++------------------------+
+|                      8 |
++------------------------+
+1 row in set (0.001 sec)
+
+41. Tampilkan jumlah pegawai yang bekerja di divisi SDM dengan fungsi aggregrat sum dan klausa
+WHERE 
+
+
+MariaDB [dbpegawai]> SELECT SUM(iddivisi) as jumlah_pegawai FROM pegawai WHERE iddivisi = 1;
++----------------+
+| jumlah_pegawai |
++----------------+
+|              5 |
++----------------+
+1 row in set (0.001 sec)
+
+42. Tampilkan jumlah pegawai berdasarkan divisi masing2 menggunakan fungsi aggregrat count
+dan klausa group by 
+
+MariaDB [dbpegawai]> SELECT iddivisi, COUNT(*) AS jumlah_pegawai
+    -> FROM pegawai
+    -> GROUP BY iddivisi;
++----------+----------------+
+| iddivisi | jumlah_pegawai |
++----------+----------------+
+|        1 |              5 |
+|        2 |              5 |
+|        3 |              5 |
+|        4 |              3 |
++----------+----------------+
+4 rows in set (0.001 sec)
+
+43. Tampilkan data jumlah pegawai berdasarkan gender,yang jumlah minimal 10 orang(gunakan
+group by dan having) 
+
+MariaDB [dbpegawai]> SELECT jenis_kelamin, COUNT(*) AS jumlah_pegawai
+    -> FROM pegawai
+    -> GROUP BY jenis_kelamin
+    -> HAVING COUNT(*) >=10;
++---------------+----------------+
+| jenis_kelamin | jumlah_pegawai |
++---------------+----------------+
+| Laki-laki     |             10 |
++---------------+----------------+
+1 row in set (0.010 sec)
+
+44. Cari kata pegawai yang berawalan kata Muhammad
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nama LIKE 'Muhammad%';
++----+------+------------------+---------------+-----------+------------+----------+-----------+---------+-------------+------+
+| id | nip  | nama             | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat  | berat_badan | umur |
++----+------+------------------+---------------+-----------+------------+----------+-----------+---------+-------------+------+
+| 10 | 0010 | muhammad iqbal   | Laki-laki     | makasar   | 2001-08-30 |        2 |         1 | bandung |          46 |   20 |
+| 14 | 0014 | muhammad santoso | Laki-laki     | bogor     | 2003-12-31 |        3 |         4 | citayem |          66 |   43 |
++----+------+------------------+---------------+-----------+------------+----------+-----------+---------+-------------+------+
+2 rows in set (0.001 sec)
+
+45. Cari data pegawai yang berakhiran kata Santoso
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nama LIKE '%Santoso';
++----+------+------------------+---------------+-----------+------------+----------+-----------+---------+-------------+------+
+| id | nip  | nama             | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat  | berat_badan | umur |
++----+------+------------------+---------------+-----------+------------+----------+-----------+---------+-------------+------+
+| 14 | 0014 | muhammad santoso | Laki-laki     | bogor     | 2003-12-31 |        3 |         4 | citayem |          66 |   43 |
++----+------+------------------+---------------+-----------+------------+----------+-----------+---------+-------------+------+
+1 row in set (0.000 sec)
+46. Cari data pegawai yang mengandung kata Asep
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nama LIKE '%Asep%';
++----+------+-------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+| id | nip  | nama              | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan | umur |
++----+------+-------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+| 11 | 0011 | Asep diki maulana | Laki-laki     | depok     | 1999-12-16 |        3 |         1 | sulawesi selatan |          68 |   46 |
++----+------+-------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+1 row in set (0.000 sec)
+
+47. Cari data pegawai yang huruf kelimannya hurud S
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nama LIKE '____S%';
++----+------+----------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+| id | nip  | nama           | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat     | berat_badan | umur |
++----+------+----------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+|  6 | 0006 | Ferisha Adilla | Perempuan     | depok     | 2005-11-23 |        2 |         1 | Jawa timur |          41 |   41 |
+|  8 | 0008 | elyas          | Laki-laki     | bandung   | 1999-01-10 |        2 |         3 | jogja      |          63 |   39 |
+|  9 | 0009 | ilyas          | Laki-laki     | bogor     | 1998-02-21 |        2 |         4 | jogja      |          61 |   31 |
++----+------+----------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+3 rows in set (0.000 sec)
