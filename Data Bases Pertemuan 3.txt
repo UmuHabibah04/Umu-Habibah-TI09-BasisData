@@ -35,14 +35,7 @@ Database changed
 MariaDB [ti09]> SHOW TABLES;
 Empty set (0.001 sec)
 
-MariaDB [ti09]>
-MariaDB [ti09]> CREATE TABLE jabatan(
-    -> id int primary key NOT NULL auto_incremenrt,
-    -> id int primary key NOT NULL auto_increment,
-    -> nama varchar(30) NOT NULL unique);
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '
-id int primary key NOT NULL auto_increment,
-nama varchar(30) NOT NULL unique)' at line 2
+
 MariaDB [ti09]> CREATE TABLE jabatan(
     -> id int primary key NOT NULL auto_increment,
     -> nama varchar(30) NOT NULL unique);
