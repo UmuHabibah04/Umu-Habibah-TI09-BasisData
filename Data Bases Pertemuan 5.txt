@@ -157,15 +157,7 @@ MariaDB [dbpostti09]> SELECT nama, tmp_lahir FROM pelanggan;
 +--------------------+------------+
 12 rows in set (0.001 sec)
 
-MariaDB [dbpostti09]> SELECT kode nama, tmp_lahir
-    -> FROM pelanggan WHERE tmp_lahir jakarta;
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'jakarta' at line 2
-MariaDB [dbpostti09]> select kode nama, tmp_lahir
-    -> FROM pelanggan WHERE tempat lahir jakarta;
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'lahir jakarta' at line 2
-MariaDB [dbpostti09]> SELECT kode nama, tmp_lahir
-    -> ;
-ERROR 1054 (42S22): Unknown column 'kode' in 'field list'
+
 MariaDB [dbpostti09]> SELECT nama, tmp_lahir FROM pelanggan
     -> WHERE tmp_lahir = 'jakarta';
 +-------------+-----------+
@@ -221,9 +213,7 @@ MariaDB [dbpostti09]> SELECT * FROM pesanan;
 +----+------------+---------+--------------+
 11 rows in set (0.000 sec)
 
-MariaDB [dbpostti09]> SELECT id,tanggal,total,pelanggan_id
-    -> FROM pelanggan WHERE pelanggan_id = 9;
-ERROR 1054 (42S22): Unknown column 'tanggal' in 'field list'
+
 MariaDB [dbpostti09]> SELECT id,tanggal,total,pelanggan_id
     -> FROM pesanan WHERE pelanggan_id = 9;
 +----+------------+-------+--------------+
@@ -234,13 +224,7 @@ MariaDB [dbpostti09]> SELECT id,tanggal,total,pelanggan_id
 +----+------------+-------+--------------+
 2 rows in set (0.001 sec)
 
-MariaDB [dbpostti09]> SELECT kode, nama, harga_jual, stok
-    -> FROM produk WHERE stok > 5 AND < 20;
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '< 20' at line 2
-MariaDB [dbpostti09]> SELECT kode ,nama ,harga_jual, stok
-    -> FROM Produk WHERE stok > 5 AND
-    -> FROM produk WHERE stok > 5 AND stok < 20;
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'FROM produk WHERE stok > 5 AND stok < 20' at line 3
+
 MariaDB [dbpostti09]> SELECT kode ,nama ,harga_jual, stok
     -> FROM produk WHERE stok > 5 AND stok < 20;
 +--------+-----------------+------------+------+
@@ -304,9 +288,7 @@ MariaDB [dbpostti09]> SELECT  kode, nama, harga_jual, stok
 +-------+-----------------+------------+------+
 7 rows in set (0.001 sec)
 
-MariaDB [dbpostti09]> SELECT nama, tmp_lahir, tgl_lahir FROM pelanggan
-    -> ORDER BY desc;
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'desc' at line 2
+
 MariaDB [dbpostti09]> SELECT nama, tmp_lahir, tgl_lahir FROM pelanggan
     -> ORDER BY nama desc;
 +--------------------+------------+------------+
@@ -347,9 +329,7 @@ MariaDB [dbpostti09]> SELECT nama, tmp_lahir, tgl_lahir FROM pelanggan
 +--------------------+------------+------------+
 12 rows in set (0.001 sec)
 
-MariaDB [dbpostti09]> SELECT nama, tmp_lahir, tgl_lahir, stok
-    -> ORDER BY harga_jual desc;
-ERROR 1054 (42S22): Unknown column 'nama' in 'field list'
+
 MariaDB [dbpostti09]> SELECT kode,nama, harga_jual,stok FROM produk
     -> ORDER BY harga_jual desc;
 +--------+-------------------+------------+------+
